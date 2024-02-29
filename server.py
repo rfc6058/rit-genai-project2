@@ -2,8 +2,10 @@ from flask import Flask, request, render_template, redirect, url_for, jsonify
 import pyotp
 from datetime import datetime, timedelta
 import uuid
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 # In-memory storage for demo purposes
 user_secrets = {}
@@ -80,6 +82,7 @@ def valid_code():
     # Server B's URL with the token parameter
     server_b_url = f"http://localhost:5001/success?token={token}"
     return render_template('valid_code.html', server_b_url=server_b_url)
+
 
 @app.route('/invalid_code')
 def invalid_code():

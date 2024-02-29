@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template
 import requests
 
 app = Flask(__name__)
@@ -7,9 +7,10 @@ app = Flask(__name__)
 def success():
     token = request.args.get('token')
     if token and verify_token_with_server_a(token):
-        return "<h1>Access Granted</h1><p>Welcome to Server B!</p>"
+        return render_template('welcome.html')
     else:
         abort(403)
+
 
 def verify_token_with_server_a(token):
     response = requests.get(f"http://localhost:5000/validate_token?token={token}")
