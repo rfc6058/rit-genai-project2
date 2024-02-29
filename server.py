@@ -46,17 +46,29 @@ def verify_code():
     username = request.form['username']
     code = request.form['code']
     secret = user_secrets.get(username)
+    
     if not secret:
         return redirect(url_for('invalid_code'))
+    
+    totp = pyotp.TOTP(secret)
+    current_time = datetime.now()
+    current_time_step = totp.timecode(current_time)
+    
+    # Check if the code is being reused
+    if is_code_reused(username, current_time_step):
+        return redirect(url_for('invalid_code'))
+    
+    if totp.verify(code):
+        # Update the last valid time step for the user
+        user_last_timestamps[username] = current_time_step
+        
+        # Token generation and storage upon successful verification
+        token = str(uuid.uuid4())
+        tokens[token] = datetime.now() + timedelta(minutes=5)  # Token expires in 5 minutes
+        return redirect(url_for('valid_code', token=token))
     else:
-        totp = pyotp.TOTP(secret)
-        if totp.verify(code) and not is_code_reused(username, totp.timecode(datetime.now())):
-            # Token generation and storage upon successful verification
-            token = str(uuid.uuid4())
-            tokens[token] = datetime.now() + timedelta(minutes=5)  # Token expires in 5 minutes
-            return redirect(url_for('valid_code', token=token))
-        else:
-            return redirect(url_for('invalid_code'))
+        return redirect(url_for('invalid_code'))
+
 
 @app.route('/validate_token', methods=['GET'])
 def validate_token():
@@ -89,9 +101,10 @@ def invalid_code():
     return render_template('invalid_code.html')
 
 
-def is_code_reused(username, current_timestamp):
-    # Check if the current timestamp is less than or equal to the last used timestamp
-    return current_timestamp <= user_last_timestamps.get(username, 0)
+def is_code_reused(username, current_time_step):
+    last_used_time_step = user_last_timestamps.get(username, 0)
+    return current_time_step <= last_used_time_step
+
 
 if __name__ == '__main__':
     app.run(debug=True)
