@@ -16,7 +16,6 @@ This TOTP (Time-Based One-Time Password) Authentication System is designed to pr
 - Python 3.x
 - Flask
 - PyOTP
-- Itsdangerous (for securely signing data)
 
 ### Installation
 
