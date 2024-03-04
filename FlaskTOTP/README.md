@@ -28,7 +28,7 @@ This TOTP (Time-Based One-Time Password) Authentication System is designed to pr
 
 ### Running Server A
 
-1. Navigate to the directory containing `server_a.py`.
+1. Navigate to the directory containing `server_a.py`. Make sure to open that folder as the workspace to get file paths correct.
 2. Run the server using Python:
 
     ```bash
@@ -39,7 +39,7 @@ Server A will start, and you can access the TOTP generation and verification fea
 
 ### Running Server B
 
-1. Navigate to the directory containing `server_b.py`.
+1. Navigate to the directory containing `server_b.py`. Make sure to open that folder as the workspace to get file paths correct.
 2. Run the server using Python:
 
     ```bash
