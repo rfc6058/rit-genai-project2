@@ -1,7 +1,7 @@
 #RN-Version
 This version of the software uses React Native and a NodeJS server to show indepenent token generation (similar to how Google Authenticator works).
 
-To run it, open `./frontend` and `./backend` in their own terminals. Run `npm install` to install all NodeJS dependencies. For the backend, rune `node ./app.js`.
+To run it, open `./frontend` and `./backend` in their own terminals. Run `npm install` to install all NodeJS dependencies. For the backend, run `node ./app.js`.
 
 For the frontend, install Android Studio and install a simulator. Open the simulator. Run `npm start` and then press `a` to open an Android simulator.
 
