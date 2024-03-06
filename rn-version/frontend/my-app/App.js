@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import * as Crypto from 'expo-crypto';
@@ -26,6 +26,12 @@ const App = () => {
   );
   setToken(digest.slice(0, 6));
   };
+  useEffect(() => {
+    const intervalId = setInterval(handleGenerateToken, 5000); // in milliseconds
+  
+    // Clean up function
+    return () => clearInterval(intervalId);
+  }, [seed]);
 
   const handleVerify = async () => {
     const res = await axios.get(`${SERVER_URL}/verify/${username}`, {
