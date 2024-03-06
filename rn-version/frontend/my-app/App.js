@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import * as Crypto from 'expo-crypto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const SERVER_URL = 'http://10.0.2.2:3000';
 
@@ -14,9 +16,23 @@ const App = () => {
   const handleEnroll = async () => {
     const res = await axios.post(`${SERVER_URL}/enroll`, { username, password });
     setSeed(res.data);
+    
     console.log(res.data);
+    await AsyncStorage.setItem('seed', res.data);
+
   };
 
+  // Load seed from storage when app starts
+useEffect(() => {
+  const loadSeed = async () => {
+    const storedSeed = await AsyncStorage.getItem('seed');
+    if (storedSeed !== null) {
+      setSeed(storedSeed);
+    }
+  };
+
+  loadSeed();
+}, []);
   const handleGenerateToken = async () => {
     const time = Math.floor(Date.now() / 30000);
   const digest = await Crypto.digestStringAsync(
